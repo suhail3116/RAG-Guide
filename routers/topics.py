@@ -20,6 +20,17 @@ async def build_index(background_tasks: BackgroundTasks):
     def _build():
         print("Fetching Wikipedia articles...")
         documents = fetcher.fetch_multiple(config.DEFAULT_TOPICS)
+        from services.curated_docs import get_curated_documents
+        for c in get_curated_documents():
+            documents.append({
+                "title": c["title"],
+                "page_content": c["full_text"],
+                "summary": c["full_text"][:400],
+                "full_text": c["full_text"],
+                "url": c["url"],
+                "categories": c.get("categories", []),
+                "length": len(c["full_text"])
+            })
         print(f"Building index from {len(documents)} documents...")
         embedder.build_index(documents)
         qa_engine._build_chain()

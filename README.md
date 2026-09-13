@@ -1,26 +1,76 @@
-# 🧠 WikiAgent: Local Wikipedia RAG Chatbot & Terminal Agent
+# 🧠 WikiAgent: Local Technical Knowledge RAG Chatbot & Agent
 
-A 100% private, local, Wikipedia-grounded conversational agent powered by **Ollama**, **LangChain**, **ChromaDB**, and **Wikipedia-API**. Supports both an interactive **Rich Terminal CLI Agent** and a production-ready **FastAPI REST API**.
+A 100% private, local, grounded Retrieval-Augmented Generation (RAG) conversational agent powered by **Ollama**, **LangChain**, **ChromaDB**, **Wikipedia-API**, and **Curated Engineering Workflows**. 
+
+Supports both an interactive **Rich Terminal CLI Agent** (with hidden/collapsible citations) and a modern **FastAPI Web Chat Interface** (with interactive collapsible source buttons).
 
 ---
 
-## 📌 What Type of Agent Is This?
+## 📌 Agent Classification & Architecture
 
-This project is a **Local Retrieval-Augmented Generation (RAG) Knowledge Agent**.
-
-### 1. Classification & Paradigm
-* **Agent Type:** **Grounded RAG Knowledge Assistant**
-* **Inference Model:** **Local Large Language Model (LLM)** via Ollama (`llama3` 8B or `llama3.2` 3B)
+* **Agent Type:** **Grounded Technical RAG Assistant**
+* **Inference Model:** **Local Lightweight LLM** via Ollama (`llama3.2:1b` for 22+ tok/s CPU inference, with auto-fallback to `llama3:latest`)
 * **Embedding Model:** **Dense Semantic Embedder** (`nomic-embed-text` - 768 dimensions)
 * **Vector Store:** **ChromaDB** (Persistent SQLite + HNSW vector indexing)
-* **External Knowledge Base:** **Wikimedia API** (dynamic live retrieval of real Wikipedia articles)
+* **Knowledge Corpus:** **37 Comprehensive Topics** (32 Wikipedia articles + 5 Curated Technical Workflow Guides)
+* **Streaming Engine:** **Real-Time Token Streaming** via Ollama NDJSON HTTP stream with sub-second Time-to-First-Token (TTFT)
+* **Offline Persistence:** **Local Disk Cache** (`data/articles_cache.json`) enabling 100% offline vector database rebuilds without internet dependencies
 
-### 2. Why RAG?
-Standard LLMs suffer from knowledge cutoffs and hallucinations. This agent eliminates both:
-1. **Dynamic Real-Time Knowledge:** Pulls current Wikipedia articles on demand using `/add <topic>`.
-2. **Strict Grounding:** The LLM is supplied with actual Wikipedia chunks as context and instructed to answer based on those excerpts.
-3. **Citations & Transparency:** Every answer includes exact Wikipedia article names, chunk previews, and clickable URLs.
-4. **100% Privacy & Offline-Ready:** Once articles are embedded, all embeddings and LLM inferences run completely on your local machine without third-party API keys or cloud telemetry.
+---
+
+## 📚 Grounded Knowledge Base (37 Curated Topics)
+
+The knowledge base spans 37 deep technical domains covering Software Engineering, AI, Web Stack, Security, and 3D Asset Pipelines:
+
+```
+├── 🐍 Core AI & Data Science
+│   ├── Python (programming language)
+│   ├── Machine learning
+│   ├── Deep learning
+│   ├── Natural language processing
+│   ├── Artificial intelligence
+│   ├── Neural network
+│   ├── Large language model
+│   └── Data science
+├── 🌳 Data Structures & Algorithms (DSA)
+│   ├── Data structure
+│   ├── Algorithm
+│   ├── Tree (data structure)
+│   └── Graph (abstract data type)
+├── 💾 Databases & Cloud Computing
+│   ├── Database
+│   ├── Relational database
+│   ├── NoSQL
+│   └── Cloud computing
+├── 🤖 Advanced AI, RAG & Agents
+│   ├── Retrieval-augmented generation (RAG)
+│   ├── Intelligent agent
+│   ├── Multi-agent system
+│   └── Prompt engineering
+├── 🛡️ Cybersecurity & Ethical Hacking
+│   ├── Computer security
+│   └── White hat (Ethical hacking)
+├── 🌐 Web & Frontend Stack
+│   ├── HTML
+│   ├── CSS
+│   ├── JavaScript
+│   ├── React (software)
+│   ├── Node.js
+│   ├── Bootstrap (front-end framework)
+│   └── Three.js
+├── 🎨 UI / UX Design
+│   ├── User interface design
+│   └── User experience
+├── 📐 Modern UI Frameworks & Architecture
+│   ├── 21st.dev UI and Component Library
+│   └── GetLayers and Layered Software Architecture
+├── 🧊 3D Software & Simulation
+│   ├── Blender (software)
+│   └── Blender in Software Engineering and 3D Pipelines
+└── 🚀 Development Lifecycles
+    ├── Website Development Lifecycle and Step-by-Step Guide
+    └── Application Development Lifecycle and Step-by-Step Guide
+```
 
 ---
 
@@ -29,30 +79,30 @@ Standard LLMs suffer from knowledge cutoffs and hallucinations. This agent elimi
 ```mermaid
 flowchart TD
     subgraph Ingestion ["Knowledge Ingestion Pipeline"]
-        W[Wikipedia API] -->|Fetch Raw Article| F[services/fetcher.py]
-        F -->|Recursive Split: 800 chars / 100 overlap| S[RecursiveCharacterTextSplitter]
+        W[Wikipedia API] -->|Fetch Articles| C[Local Cache: data/articles_cache.json]
+        G[services/curated_docs.py] -->|Curated Workflow Guides| C
+        C -->|Recursive Split: 500 chars / 50 overlap| S[RecursiveCharacterTextSplitter]
         S -->|Text Chunks| E[nomic-embed-text via Ollama]
-        E -->|Dense Embeddings| C[(ChromaDB: wiki_vector_db)]
+        E -->|Dense Embeddings| V[(ChromaDB: wiki_vector_db)]
     end
 
-    subgraph Query ["Query & Reasoning Pipeline"]
-        U[User Question] --> Q[RetrievalQA Chain]
-        Q -->|Embed Query| E2[nomic-embed-text]
-        E2 -->|Similarity Search k=3| C
-        C -->|Top 3 Chunks + URLs| Q
-        Q -->|Prompt: Context + Question| L[Ollama: llama3 LLM]
-        L -->|Synthesized Grounded Answer| Out[Formatted Markdown + Source Links]
+    subgraph Query ["Query & Streaming Pipeline"]
+        U[User Query] --> Q[QA Engine]
+        Q -->|Similarity Search k=2| V
+        V -->|Top Chunks + URLs| Q
+        Q -->|NDJSON HTTP Stream| L[Ollama: llama3.2:1b]
+        L -->|Sub-second Token Stream| Out[Streamed Answer]
     end
 
-    subgraph Interfaces ["User Interfaces"]
-        Out --> CLI[agent.py / run_agent.ps1\nTerminal REPL]
-        Out --> API[main.py / uvicorn\nFastAPI REST API]
+    subgraph Interfaces ["Dual User Interfaces"]
+        Out --> CLI[agent.py / run_agent.ps1\nTerminal REPL + /sources toggle]
+        Out --> WEB[http://localhost:8000\nWeb UI + Collapsible Source Button]
     end
 ```
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Directory Structure
 
 ```
 wiki_chatbot_api/
@@ -60,23 +110,24 @@ wiki_chatbot_api/
 ├── run_agent.ps1         # One-command PowerShell quick launcher
 ├── run_agent.bat         # One-click Windows CMD / Explorer launcher
 ├── main.py               # FastAPI application with CORS and route handlers
-├── config.py             # Global configurations (Ollama, Chroma, Chunking, Models)
+├── config.py             # Global configuration (Models, Threading, Chunks, Topics)
 ├── requirements.txt      # Locked dependency manifest
 ├── README.md             # Complete documentation and user guide
-├── wiki_vector_db/       # Persistent local ChromaDB database (SQLite + embeddings)
+├── wiki_vector_db/       # Persistent local ChromaDB database (SQLite + HNSW vectors)
+├── data/
+│   └── articles_cache.json # Local offline cache of raw pre-gathered text articles
 ├── models/
-│   ├── __init__.py
-│   └── schemas.py        # Pydantic schemas for requests and responses
+│   └── schemas.py        # Pydantic schemas for REST API requests and responses
 ├── services/
-│   ├── __init__.py
-│   ├── fetcher.py        # Wikipedia fetcher with compliant User-Agent policy
+│   ├── fetcher.py        # Rate-limit safe Wikipedia fetcher
 │   ├── embedder.py       # Chunking, embeddings, and ChromaDB vector store
-│   └── qa_engine.py      # LangChain RetrievalQA chain and Ollama LLM integration
+│   ├── qa_engine.py      # Direct streaming QA engine & Ollama LLM integration
+│   └── curated_docs.py   # Specialized technical & workflow guides (21st.dev, Blender, SDLC)
 └── routers/
-    ├── __init__.py
-    ├── chat.py           # Endpoints: POST /chat/, POST /chat/stream
-    ├── topics.py         # Endpoints: /topics/build, /add, /list, /refresh, /search
-    └── status.py         # Endpoints: GET /status/, GET /status/health
+    ├── ui.py             # Web UI HTML chat router with collapsible sources button
+    ├── chat.py           # REST endpoints: POST /chat/, POST /chat/stream
+    ├── topics.py         # REST endpoints: /topics/build, /topics/add, /topics/list
+    └── status.py         # REST endpoints: GET /status/, GET /status/health
 ```
 
 ---
@@ -84,19 +135,16 @@ wiki_chatbot_api/
 ## 🚀 Prerequisites
 
 1. **Python 3.9+** (Tested on Python 3.13)
-2. **Ollama for Windows** installed.
+2. **Ollama for Windows** installed and running.
 3. Download the required models in a terminal:
    ```powershell
    ollama pull nomic-embed-text
-   ollama pull llama3
+   ollama pull llama3.2:1b
    ```
-   *(For faster responses on CPU-only machines, you can pull `llama3.2` and set `LLM_MODEL = "llama3.2"` in `config.py`).*
 
 ---
 
 ## ⚙️ Installation
-
-Navigate to the project folder and set up the virtual environment:
 
 ```powershell
 # 1. Navigate to project directory
@@ -111,9 +159,9 @@ python -m venv .venv
 
 ---
 
-## 🖥️ Mode 1: Run the Interactive Terminal Agent (Recommended)
+## 🖥️ Mode 1: Interactive Terminal Agent (CLI)
 
-The terminal agent runs directly in your terminal without requiring a web server or browser.
+The terminal agent runs directly in your PowerShell or Command Prompt with Rich styling and hidden citations by default.
 
 ### Launching:
 ```powershell
@@ -121,74 +169,59 @@ The terminal agent runs directly in your terminal without requiring a web server
 ```
 *(Or run `.\.venv\Scripts\python.exe agent.py`, or double-click `run_agent.bat`)*
 
-### Interactive Commands:
+### Interactive Slash Commands:
 
 | Command | Description | Example |
 | :--- | :--- | :--- |
-| **`your question`** | Ask any question against indexed Wikipedia knowledge | `What is Python and what are its core features?` |
-| **`/add <topic>`** | Fetch and index an article immediately on the fly | `/add Quantum computing` |
-| **`/topics`** | List all currently indexed Wikipedia articles | `/topics` |
-| **`/search <query>`** | Search Wikipedia for article titles without indexing | `/search Artificial neural network` |
-| **`/build`** | Fetch and index all default Wikipedia articles | `/build` |
-| **`/stats`** | View vector store count and Ollama connectivity | `/stats` |
+| **`your question`** | Ask any question or single keyword topic | `python` or `What is a binary search tree?` |
+| **`/sources`** | View source citations for the last answer | `/sources` |
+| **`/sources on`** | Toggle auto-showing sources after every answer | `/sources on` |
+| **`/sources off`** | Keep sources hidden by default (clean terminal mode) | `/sources off` |
+| **`/topics`** | List all currently indexed topics in vector store | `/topics` |
+| **`/add <topic>`** | Fetch and index a custom Wikipedia article | `/add Quantum computing` |
+| **`/search <query>`** | Search Wikipedia for article titles without indexing | `/search Neural network` |
+| **`/build`** | Rebuild all 37 technical topics into ChromaDB | `/build` |
+| **`/stats`** | View vector database statistics and Ollama model status | `/stats` |
 | **`/clear`** | Clear the terminal screen | `/clear` |
-| **`/help`** | Display the command reference table | `/help` |
-| **`exit` / `quit`** | Exit the agent | `exit` |
+| **`/help`** | Display available commands | `/help` |
+| **`exit` / `quit`** | Exit the chatbot agent | `exit` |
 
 ---
 
-## 🌐 Mode 2: Run as a FastAPI REST API
+## 🌐 Mode 2: Modern Web Chat Interface
 
-If you want to integrate the chatbot with web frontends, mobile apps, or automation workflows:
+If you prefer a browser-based chat with an interactive **collapsible source button**:
 
 ### Launching the Server:
 ```powershell
 .\.venv\Scripts\python.exe -m uvicorn main:app --reload --port 8000
 ```
 
-### Accessing Interactive Documentation:
-* **Swagger UI:** [http://localhost:8000/docs](http://localhost:8000/docs)
-* **ReDoc:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
+### Accessing the Web UI:
+* **Web Chat App:** [http://localhost:8000](http://localhost:8000) (or `/app`)
+* **Swagger API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### REST API Endpoints:
-
-| Category | Method | Path | Description |
-| :--- | :--- | :--- | :--- |
-| **Chat** | `POST` | `/chat/` | Query the chatbot; returns answer and Wikipedia sources. |
-| **Chat** | `POST` | `/chat/stream` | Stream answers live using Server-Sent Events (SSE). |
-| **Topics** | `POST` | `/topics/build` | Background task: index all 8 default Wikipedia topics. |
-| **Topics** | `POST` | `/topics/add` | Background task: index a custom list of Wikipedia topics. |
-| **Topics** | `GET` | `/topics/list` | List all currently indexed topics and chunk counts. |
-| **Topics** | `POST` | `/topics/refresh` | Re-index or refresh topics. |
-| **Topics** | `POST` | `/topics/search` | Search Wikipedia for potential topic titles. |
-| **Status** | `GET` | `/status/` | Diagnostics: Ollama connection, loaded models, chunk count. |
-| **Status** | `GET` | `/status/health` | Simple liveness health check probe. |
+### Web UI Highlights:
+* **Collapsible `[ 📚 Sources (N) ▸ ]` Button**: Sources and URL links are hidden inside an accordion button under each bot message.
+* **One-Click Topic Chips**: Clickable suggestion buttons (`🐍 Python`, `🌳 Data Structures`, `⚛️ React.js`, `🤖 AI Agents`, `🎨 21st.dev`, `🧊 Blender in Engineering`, `🚀 Website Steps`, `🛡️ Cybersecurity`).
 
 ---
 
-## 🛠️ Configuration Guide (`config.py`)
+## 🛠️ Configuration & Speed Tuning (`config.py`)
 
-All core parameters can be modified in [config.py](file:///C:/Users/91999/.gemini/antigravity/scratch/wiki_chatbot_api/config.py):
+All parameters are pre-tuned for maximum CPU inference performance in [config.py](file:///C:/Users/91999/.gemini/antigravity/scratch/wiki_chatbot_api/config.py):
 
 ```python
 class Config:
     OLLAMA_BASE_URL = "http://localhost:11434" # Ollama server address
-    EMBED_MODEL = "nomic-embed-text"            # Embedding model for vector store
-    LLM_MODEL = "llama3"                        # LLM model for generation (or llama3.2)
-    PERSIST_DIR = Path("./wiki_vector_db")      # Local directory for ChromaDB
-    COLLECTION_NAME = "wiki_collection"         # Persistent Chroma collection name
-    CHUNK_SIZE = 800                            # Maximum characters per text chunk
-    CHUNK_OVERLAP = 100                         # Overlapping characters between chunks
-    TOP_K_RESULTS = 3                           # Number of chunks passed to LLM context
-    LLM_TEMPERATURE = 0.3                       # Generation temperature (lower = more deterministic)
-    LLM_TOP_P = 0.9                             # Nucleus sampling probability
-    LLM_REPEAT_PENALTY = 1.1                    # Repetition penalty
+    EMBED_MODEL = "nomic-embed-text"            # Embedding model (768-dim)
+    LLM_MODEL = "llama3.2:1b"                   # Ultra-fast 1B model (22+ tok/s CPU)
+    OLLAMA_KEEP_ALIVE = -1                      # Keep model resident in RAM
+    OLLAMA_NUM_THREADS = 8                      # Multi-core CPU thread tuning
+    OLLAMA_NUM_CTX = 1024                       # Bounded KV cache context window
+    CHUNK_SIZE = 500                            # Maximum characters per text chunk
+    CHUNK_OVERLAP = 50                          # Overlapping characters
+    TOP_K_RESULTS = 2                           # Top chunks passed to LLM
+    MAX_CONTEXT_CHARS = 1000                    # Maximum prompt context size
+    LLM_NUM_PREDICT = 90                        # Bounded direct 1-3 sentence answers
 ```
-
----
-
-## 🔍 Troubleshooting & Optimization
-
-* **Windows UTF-8 Encoding:** All CLI scripts use UTF-8 (`chcp 65001` and `sys.stdout.reconfigure(encoding="utf-8")`) to prevent `UnicodeEncodeError` on Windows terminals.
-* **Database File Locking:** Native ChromaDB `delete_collection()` is used instead of filesystem deletion (`shutil.rmtree`) to prevent `PermissionError: [WinError 32]` on Windows.
-* **CPU Inference Optimization:** If responses on CPU take longer than desired, switch to `llama3.2` (3B parameters) by running `ollama pull llama3.2` and updating `LLM_MODEL = "llama3.2"` in `config.py`.

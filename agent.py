@@ -14,6 +14,7 @@ if sys.platform == "win32":
 warnings.filterwarnings("ignore")
 warnings.simplefilter("ignore")
 from pathlib import Path
+import json
 import httpx
 from rich.console import Console
 from rich.panel import Panel
@@ -26,6 +27,7 @@ from config import config
 from services.fetcher import fetcher
 from services.embedder import embedder
 from services.qa_engine import qa_engine
+from services.curated_docs import get_curated_documents
 
 console = Console()
 
@@ -51,15 +53,37 @@ def print_banner():
     )
     console.print(Panel(banner_text, border_style="cyan", title=" WikiAgent CLI "))
 
+last_sources = []
+show_sources_by_default = False
+
+def print_sources(sources_list=None):
+    """Print sources in an organized, readable view."""
+    global last_sources
+    target = sources_list if sources_list is not None else last_sources
+    if not target:
+        console.print("[yellow]No source citations available for the last query.[/yellow]\n")
+        return
+
+    console.print(f"\n[bold cyan]📚 Wikipedia Sources ({len(target)} citations):[/bold cyan]")
+    for idx, s in enumerate(target, 1):
+        src_name = s.get("source", "Wikipedia")
+        url = s.get("url", "")
+        url_str = f" ([link={url}]{url}[/link])" if url else ""
+        console.print(f"  [bold cyan][{idx}][/bold cyan] [bold]{src_name}[/bold]{url_str}")
+        preview = s.get("chunk_preview", "").replace("\n", " ").strip()
+        console.print(f"      [dim]\"{preview[:140]}...\"[/dim]")
+    console.print()
+
 def show_help():
     """Display interactive commands."""
     table = Table(title="Available Commands", border_style="dim")
     table.add_column("Command", style="cyan", no_wrap=True)
     table.add_column("Description", style="white")
+    table.add_row("/sources", "View sources for the last answer (or '/sources on|off' to toggle)")
     table.add_row("/topics", "List all currently indexed Wikipedia articles")
     table.add_row("/add <topic>", "Fetch and index a Wikipedia article (e.g. /add Machine learning)")
     table.add_row("/search <query>", "Search Wikipedia for article titles")
-    table.add_row("/build", "Index all default Wikipedia topics")
+    table.add_row("/build", "Index all 37 technical & engineering topics into ChromaDB")
     table.add_row("/stats", "Show database statistics and model info")
     table.add_row("/clear", "Clear the terminal screen")
     table.add_row("/help", "Show this help table")
@@ -77,6 +101,7 @@ def show_stats():
 
     table.add_row("Ollama Server", "Connected" if ollama_ok else "Disconnected (check 'ollama serve')")
     table.add_row("Configured LLM", config.LLM_MODEL)
+    table.add_row("Active Engine LLM", getattr(qa_engine, "active_model", config.LLM_MODEL))
     table.add_row("Configured Embedder", config.EMBED_MODEL)
     table.add_row("Available Models", ", ".join(models) if models else "None")
     table.add_row("Total Chunks in DB", str(stats.get("total_chunks", 0)))
@@ -136,36 +161,76 @@ def add_topic(topic: str):
 
     console.print(f"[bold green]✓ Successfully indexed '{doc['title']}' into the knowledge base![/bold green]\n")
 
-def build_default_topics():
-    """Index all default Wikipedia topics."""
-    console.print(f"[yellow]This will fetch and index {len(config.DEFAULT_TOPICS)} default topics.[/yellow]")
-    console.print("[dim]Articles: " + ", ".join(config.DEFAULT_TOPICS) + "[/dim]")
-    confirm = Prompt.ask("Proceed with indexing?", choices=["y", "n"], default="y")
-    if confirm != "y":
-        console.print("[dim]Build cancelled.[/dim]\n")
-        return
+def build_default_topics(interactive: bool = True):
+    """Cleanly build vector database from the 32 Wikipedia topics + 5 curated engineering workflows."""
+    curated_docs = get_curated_documents()
+    total_count = len(config.DEFAULT_TOPICS) + len(curated_docs)
+    console.print(f"[yellow]This will cleanly rebuild the knowledge base with {total_count} topics ({len(config.DEFAULT_TOPICS)} Wikipedia + {len(curated_docs)} Curated Guides).[/yellow]")
+
+    if interactive:
+        confirm = Prompt.ask("Proceed with clean build?", choices=["y", "n"], default="y")
+        if confirm != "y":
+            console.print("[dim]Build cancelled.[/dim]\n")
+            return
 
     docs = []
-    with console.status("[cyan]Fetching default articles from Wikipedia...[/cyan]", spinner="dots") as status:
-        for t in config.DEFAULT_TOPICS:
-            status.update(f"[cyan]Fetching '{t}'...[/cyan]")
-            d = fetcher.fetch(t)
-            if d:
-                docs.append(d)
-                console.print(f"  [green]✓[/green] {t}")
-            else:
-                console.print(f"  [yellow]✗[/yellow] {t} (not found)")
+    cache_file = Path("./data/articles_cache.json")
+    cache_file.parent.mkdir(exist_ok=True)
+    cached_data = {}
+    if cache_file.exists():
+        try:
+            with open(cache_file, "r", encoding="utf-8") as f:
+                cached_data = json.load(f)
+        except Exception:
+            cached_data = {}
 
-    console.print(f"[cyan]Generating embeddings for {len(docs)} articles with {config.EMBED_MODEL}...[/cyan]")
+    # 1. Fetch Wikipedia articles (using local cache when available)
+    with console.status("[cyan]Retrieving Wikipedia articles...[/cyan]", spinner="dots") as status:
+        for idx, t in enumerate(config.DEFAULT_TOPICS, 1):
+            status.update(f"[cyan][{idx}/{len(config.DEFAULT_TOPICS)}] Processing '{t}'...[/cyan]")
+            if t in cached_data and cached_data[t]:
+                d = cached_data[t]
+                docs.append(d)
+                console.print(f"  [green]✓[/green] [{idx}/{len(config.DEFAULT_TOPICS)}] {t} [dim](cached)[/dim]")
+            else:
+                d = fetcher.fetch(t)
+                if d:
+                    cached_data[t] = d
+                    docs.append(d)
+                    console.print(f"  [green]✓[/green] [{idx}/{len(config.DEFAULT_TOPICS)}] {t} [dim]({d['length']} chars)[/dim]")
+                else:
+                    console.print(f"  [yellow]✗[/yellow] [{idx}/{len(config.DEFAULT_TOPICS)}] {t} (not found)")
+
+    # Save cache
+    try:
+        with open(cache_file, "w", encoding="utf-8") as f:
+            json.dump(cached_data, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+
+    # 2. Append curated technical documents
+    for c in curated_docs:
+        docs.append({
+            "title": c["title"],
+            "page_content": c["full_text"],
+            "summary": c["full_text"][:400],
+            "full_text": c["full_text"],
+            "url": c["url"],
+            "categories": c.get("categories", []),
+            "length": len(c["full_text"])
+        })
+        console.print(f"  [green]✓[/green] [bold cyan]{c['title']}[/bold cyan] [dim]({len(c['full_text'])} chars)[/dim]")
+
+    console.print(f"\n[cyan]Generating embeddings for {len(docs)} articles with {config.EMBED_MODEL}...[/cyan]")
     with console.status("[cyan]Embedding chunks into ChromaDB (this may take 1-2 minutes)...[/cyan]", spinner="dots"):
         embedder.build_index(docs)
         qa_engine._build_chain()
 
     stats = embedder.get_stats()
-    console.print(f"[bold green]✓ Build complete! Total chunks indexed: {stats['total_chunks']}[/bold green]\n")
+    console.print(f"[bold green]✓ Clean build complete! Total topics indexed: {stats['topics_count']} | Total chunks: {stats['total_chunks']}[/bold green]\n")
 
 def ask_question(question: str):
-    """Execute QA query and print formatted answer with sources."""
+    """Execute QA query with real-time streaming answer and sources."""
     stats = embedder.get_stats()
     if stats["total_chunks"] == 0:
         console.print("[bold red]No articles indexed in vector database![/bold red]")
@@ -175,30 +240,40 @@ def ask_question(question: str):
         console.print("  • [cyan]/build[/cyan] (indexes all default topics)\n")
         return
 
-    with console.status(f"[cyan]Searching knowledge base & generating answer with {config.LLM_MODEL}...[/cyan]", spinner="dots"):
-        try:
-            result = qa_engine.query(question, top_k=config.TOP_K_RESULTS)
-        except Exception as e:
-            console.print(f"[bold red]Error during query:[/] {e}")
-            return
+    with console.status(f"[cyan]Searching knowledge base & connecting to {config.LLM_MODEL}...[/cyan]", spinner="dots"):
+        stream_gen = qa_engine.stream_query(question, top_k=config.TOP_K_RESULTS)
 
-    # Print answer
     console.print("\n" + "-" * 60)
-    console.print(Markdown(result["answer"]))
-    console.print("-" * 60)
+    sources = []
+    has_tokens = False
 
-    # Print sources
-    sources = result.get("sources", [])
+    try:
+        for token, src_list in stream_gen:
+            if token:
+                console.print(token, end="")
+                has_tokens = True
+            if src_list is not None:
+                sources = src_list
+    except Exception as e:
+        console.print(f"\n[bold red]Error during query:[/] {e}")
+        return
+
+    if not has_tokens and not sources:
+        console.print("[dim italic]No response generated.[/dim italic]")
+
+    console.print("\n" + "-" * 60)
+
+    # Handle sources (hidden by default to keep terminal clean)
+    global last_sources, show_sources_by_default
+    last_sources = sources
     if sources:
-        console.print("[dim bold]Sources:[/dim bold]")
-        for idx, s in enumerate(sources, 1):
-            src_name = s.get("source", "Wikipedia")
-            url = s.get("url", "")
-            url_str = f" ([link={url}]{url}[/link])" if url else ""
-            console.print(f" [cyan]{idx}.[/cyan] [bold]{src_name}[/bold]{url_str}")
-            preview = s.get("chunk_preview", "").replace("\n", " ").strip()
-            console.print(f"    [dim]\"{preview[:140]}...\"[/dim]")
-    console.print()
+        if show_sources_by_default:
+            print_sources(sources)
+        else:
+            console.print(
+                f"[dim]📚 [bold]{len(sources)} sources hidden[/bold]. "
+                f"Type [bold cyan]/sources[/bold cyan] to view, or [bold cyan]/sources on[/bold cyan] to auto-show.[/dim]\n"
+            )
 
 def main():
     # Support non-interactive test flag
@@ -212,6 +287,9 @@ def main():
             return
         elif sys.argv[1] == "--topics":
             show_topics()
+            return
+        elif sys.argv[1] == "--build":
+            build_default_topics(interactive=False)
             return
 
     print_banner()
@@ -247,6 +325,16 @@ def main():
             show_stats()
         elif cmd in ("/topics", "/list"):
             show_topics()
+        elif cmd in ("/engineering", "/build engineering"):
+            build_engineering_topics()
+        elif cmd in ("/sources", "/source"):
+            print_sources()
+        elif cmd in ("/sources on", "/sources enable", "/sources show"):
+            show_sources_by_default = True
+            console.print("[green]✓ Sources will now be displayed automatically after each answer.[/green]\n")
+        elif cmd in ("/sources off", "/sources disable", "/sources hide"):
+            show_sources_by_default = False
+            console.print("[yellow]✓ Sources will be hidden by default. Type /sources to inspect them anytime.[/yellow]\n")
         elif cmd == "/clear":
             os.system("cls" if os.name == "nt" else "clear")
             print_banner()
