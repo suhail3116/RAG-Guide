@@ -23,9 +23,9 @@ class Config:
     PERSIST_DIR = Path("./wiki_vector_db")
     COLLECTION_NAME = "wiki_collection"
 
-    # Chunking settings (smaller chunks = faster embedding and leaner context)
-    CHUNK_SIZE = 500
-    CHUNK_OVERLAP = 50
+    # Chunking settings (balanced for fast embedding & rich RAG context)
+    CHUNK_SIZE = 1000
+    CHUNK_OVERLAP = 100
 
     # Retrieval settings (top 2 chunks is optimal for speed and precision)
     TOP_K_RESULTS = 2

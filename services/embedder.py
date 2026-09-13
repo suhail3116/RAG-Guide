@@ -8,19 +8,49 @@ try:
 except (ImportError, ModuleNotFoundError):
     from langchain.schema import Document
 
-from langchain_community.embeddings import OllamaEmbeddings
+import requests
+from langchain_core.embeddings import Embeddings
 from langchain_community.vectorstores import Chroma
 from typing import List, Dict, Optional
 from config import config
 import shutil
 import os
 
+class FastOllamaEmbeddings(Embeddings):
+    def __init__(self, model: str = config.EMBED_MODEL, base_url: str = config.OLLAMA_BASE_URL):
+        self.model = model
+        self.base_url = base_url.rstrip("/")
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        embeddings = []
+        batch_size = 50
+        for i in range(0, len(texts), batch_size):
+            batch = texts[i:i + batch_size]
+            resp = requests.post(
+                f"{self.base_url}/api/embed",
+                json={"model": self.model, "input": batch},
+                timeout=120
+            )
+            if resp.status_code == 200:
+                embeddings.extend(resp.json()["embeddings"])
+            else:
+                raise RuntimeError(f"Ollama embed error {resp.status_code}: {resp.text}")
+        return embeddings
+
+    def embed_query(self, text: str) -> List[float]:
+        resp = requests.post(
+            f"{self.base_url}/api/embed",
+            json={"model": self.model, "input": [text]},
+            timeout=30
+        )
+        if resp.status_code == 200:
+            return resp.json()["embeddings"][0]
+        else:
+            raise RuntimeError(f"Ollama embed error {resp.status_code}: {resp.text}")
+
 class Embedder:
     def __init__(self):
-        self.embeddings = OllamaEmbeddings(
-            model=config.EMBED_MODEL,
-            base_url=config.OLLAMA_BASE_URL
-        )
+        self.embeddings = FastOllamaEmbeddings()
         self.vectorstore: Optional[Chroma] = None
         self._init_vectorstore()
 
