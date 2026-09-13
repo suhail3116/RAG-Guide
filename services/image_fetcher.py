@@ -42,6 +42,8 @@ def create_fallback_svg(topic_title: str, save_path: str):
     with open(save_path, "w", encoding="utf-8") as f:
         f.write(svg_content)
 
+from services.curated_docs import CURATED_DOCUMENTS
+
 def fetch_and_cache_images():
     if not os.path.exists(CACHE_FILE):
         print(f"[ERROR] {CACHE_FILE} not found!")
@@ -49,6 +51,16 @@ def fetch_and_cache_images():
 
     with open(CACHE_FILE, "r", encoding="utf-8") as f:
         articles = json.load(f)
+
+    # Merge curated docs titles for image generation
+    for doc in CURATED_DOCUMENTS:
+        title = doc["title"]
+        if title not in articles:
+            articles[title] = {
+                "title": title,
+                "url": doc.get("url", ""),
+                "summary": doc.get("full_text", "")[:400]
+            }
 
     print(f"🖼️ Fetching offline images for {len(articles)} topics...")
     updated = False

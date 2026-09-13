@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
+  <rect width="400" height="200" rx="12" fill="#1e293b"/>
+  <rect x="10" y="10" width="380" height="180" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+  <text x="200" y="90" font-family="sans-serif" font-size="40" text-anchor="middle" fill="#38bdf8">💡</text>
+  <text x="200" y="130" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#f8fafc">21st.dev UI and Component Library</text>
+  <text x="200" y="155" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#94a3b8">WikiAgent Engineering Guide</text>
+</svg>

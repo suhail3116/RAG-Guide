@@ -688,5 +688,40 @@
     "length": 36258,
     "image_url": "/static/images/blender__software.jpg",
     "local_image_path": "data/images/blender__software.jpg"
+  },
+  "21st.dev UI and Component Library": {
+    "title": "21st.dev UI and Component Library",
+    "url": "https://21st.dev",
+    "summary": "21st.dev is a modern open-source UI component platform and design ecosystem designed specifically for frontend engineers working with React, Next.js, Tailwind CSS, and Framer Motion. Often referred to as a curated marketplace and showcase for high-craft UI, 21st.dev enables developers to discover, preview, copy, and integrate production-grade interactive components into modern web applications.\n\nC",
+    "image_url": "/static/images/21st_dev_ui_and_component_library.svg",
+    "local_image_path": "data/images/21st_dev_ui_and_component_library.svg"
+  },
+  "GetLayers and Layered Software Architecture": {
+    "title": "GetLayers and Layered Software Architecture",
+    "url": "https://en.wikipedia.org/wiki/Multitier_architecture",
+    "summary": "Layered architecture (and layer design patterns such as GetLayers) is an essential software engineering paradigm that organizes a codebase into distinct horizontal layers, each possessing specific responsibilities and clear abstraction boundaries.\n\nKey Layers in Modern Software Engineering:\n1. Presentation Layer (UI / Client Layer): Responsible for rendering user interfaces, capturing user events,",
+    "image_url": "/static/images/getlayers_and_layered_software_architecture.svg",
+    "local_image_path": "data/images/getlayers_and_layered_software_architecture.svg"
+  },
+  "Blender in Software Engineering and 3D Pipelines": {
+    "title": "Blender in Software Engineering and 3D Pipelines",
+    "url": "https://www.blender.org/features/pipeline/",
+    "summary": "Blender is an open-source 3D creation suite extensively integrated into software engineering pipelines, game development, spatial computing, simulation, and modern web application development.\n\nKey Applications of Blender in Software Engineering:\n1. Web 3D Asset Pipelines (Three.js & WebGL):\nSoftware engineers use Blender to model, texture, rig, and optimize 3D assets before exporting them into st",
+    "image_url": "/static/images/blender_in_software_engineering_and_3d_pipelines.svg",
+    "local_image_path": "data/images/blender_in_software_engineering_and_3d_pipelines.svg"
+  },
+  "Website Development Lifecycle and Step-by-Step Guide": {
+    "title": "Website Development Lifecycle and Step-by-Step Guide",
+    "url": "https://en.wikipedia.org/wiki/Web_development",
+    "summary": "The Website Development Lifecycle is a structured multi-phase engineering process used to plan, design, develop, test, deploy, and maintain robust web applications.\n\nStep-by-Step Stages of Modern Website Development:\n\nPhase 1: Discovery, Planning, and Technical Requirements\n- Defining the target audience, business goals, and core user personas.\n- Determining technical stack requirements: static vs",
+    "image_url": "/static/images/website_development_lifecycle_and_step_by_step_guide.svg",
+    "local_image_path": "data/images/website_development_lifecycle_and_step_by_step_guide.svg"
+  },
+  "Application Development Lifecycle and Step-by-Step Guide": {
+    "title": "Application Development Lifecycle and Step-by-Step Guide",
+    "url": "https://en.wikipedia.org/wiki/Systems_development_life_cycle",
+    "summary": "The Application Development Lifecycle (Software Development Life Cycle - SDLC) provides an iterative, disciplined methodology for engineering high-performance mobile, web, and desktop software applications.\n\nComprehensive Steps in Application Engineering:\n\nStep 1: Ideation, Feasibility, and Scope Definition\n- Identifying the core problem statement, value proposition, and user personas.\n- Determini",
+    "image_url": "/static/images/application_development_lifecycle_and_step_by_step_guide.svg",
+    "local_image_path": "data/images/application_development_lifecycle_and_step_by_step_guide.svg"
   }
 }
