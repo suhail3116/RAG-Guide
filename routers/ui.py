@@ -247,11 +247,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         const dropdown = document.createElement('div');
         dropdown.className = 'sources-dropdown hidden';
         dropdown.innerHTML = sources.map((s, idx) => `
-          <div class="source-item">
-            <div class="source-title">
-              ${idx + 1}. <a href="${s.url || '#'}" target="_blank" rel="noopener">${s.source || 'Wikipedia'} ↗</a>
+          <div class="source-item" style="display: flex; gap: 12px; align-items: center;">
+            ${s.image_url ? `<img src="${s.image_url}" alt="${s.source}" style="width: 55px; height: 55px; object-fit: cover; border-radius: 6px; border: 1px solid #475569; background: #1e293b;" />` : ''}
+            <div style="flex: 1;">
+              <div class="source-title">
+                ${idx + 1}. <a href="${s.url || '#'}" target="_blank" rel="noopener">${s.source || 'Wikipedia'} ↗</a>
+              </div>
+              <div class="source-snippet">"${(s.chunk_preview || '').substring(0, 180)}..."</div>
             </div>
-            <div class="source-snippet">"${(s.chunk_preview || '').substring(0, 180)}..."</div>
           </div>
         `).join('');
         msgDiv.appendChild(dropdown);

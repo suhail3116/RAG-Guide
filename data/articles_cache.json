@@ -17,7 +17,9 @@
       "Category:Articles with example Python (programming language) code",
       "Category:Articles with failed verification from August 2025"
     ],
-    "length": 43462
+    "length": 43462,
+    "image_url": "/static/images/python__programming_language.jpg",
+    "local_image_path": "data/images/python__programming_language.jpg"
   },
   "Machine learning": {
     "title": "Machine learning",
@@ -37,7 +39,9 @@
       "Category:Articles with unsourced statements from March 2026",
       "Category:Articles with unsourced statements from October 2025"
     ],
-    "length": 58977
+    "length": 58977,
+    "image_url": "/static/images/machine_learning.svg",
+    "local_image_path": "data/images/machine_learning.svg"
   },
   "Deep learning": {
     "title": "Deep learning",
@@ -57,7 +61,9 @@
       "Category:Articles with unsourced statements from July 2016",
       "Category:Articles with unsourced statements from June 2026"
     ],
-    "length": 57336
+    "length": 57336,
+    "image_url": "/static/images/deep_learning.jpg",
+    "local_image_path": "data/images/deep_learning.jpg"
   },
   "Natural language processing": {
     "title": "Natural language processing",
@@ -77,7 +83,9 @@
       "Category:CS1 maint: location",
       "Category:Commons category link from Wikidata"
     ],
-    "length": 31990
+    "length": 31990,
+    "image_url": "/static/images/natural_language_processing.svg",
+    "local_image_path": "data/images/natural_language_processing.svg"
   },
   "Artificial intelligence": {
     "title": "Artificial intelligence",
@@ -97,7 +105,9 @@
       "Category:CS1 Japanese-language sources (ja)",
       "Category:CS1 maint: url-status"
     ],
-    "length": 87370
+    "length": 87370,
+    "image_url": "/static/images/artificial_intelligence.svg",
+    "local_image_path": "data/images/artificial_intelligence.svg"
   },
   "Neural network": {
     "title": "Neural network",
@@ -115,7 +125,9 @@
       "Category:Use American English from April 2025",
       "Category:Use mdy dates from April 2025"
     ],
-    "length": 5300
+    "length": 5300,
+    "image_url": "/static/images/neural_network.svg",
+    "local_image_path": "data/images/neural_network.svg"
   },
   "Large language model": {
     "title": "Large language model",
@@ -135,7 +147,9 @@
       "Category:Articles with unsourced statements from August 2026",
       "Category:Articles with unsourced statements from November 2025"
     ],
-    "length": 55614
+    "length": 55614,
+    "image_url": "/static/images/large_language_model.svg",
+    "local_image_path": "data/images/large_language_model.svg"
   },
   "Data science": {
     "title": "Data science",
@@ -152,7 +166,9 @@
       "Category:Short description is different from Wikidata",
       "Category:Use dmy dates from August 2023"
     ],
-    "length": 7780
+    "length": 7780,
+    "image_url": "/static/images/data_science.jpg",
+    "local_image_path": "data/images/data_science.jpg"
   },
   "Data structure": {
     "title": "Data structure",
@@ -168,7 +184,9 @@
       "Category:Pages using Sister project links with hidden wikidata",
       "Category:Short description matches Wikidata"
     ],
-    "length": 9211
+    "length": 9211,
+    "image_url": "/static/images/data_structure.jpg",
+    "local_image_path": "data/images/data_structure.jpg"
   },
   "Algorithm": {
     "title": "Algorithm",
@@ -188,7 +206,9 @@
       "Category:CS1: abbreviated year range",
       "Category:Commons category link from Wikidata"
     ],
-    "length": 28369
+    "length": 28369,
+    "image_url": "/static/images/algorithm.jpg",
+    "local_image_path": "data/images/algorithm.jpg"
   },
   "Tree (data structure)": {
     "title": "Tree (abstract data type)",
@@ -207,7 +227,9 @@
       "Category:Short description is different from Wikidata",
       "Category:Trees (data structures)"
     ],
-    "length": 11754
+    "length": 11754,
+    "image_url": "/static/images/tree__data_structure.jpg",
+    "local_image_path": "data/images/tree__data_structure.jpg"
   },
   "Graph (abstract data type)": {
     "title": "Graph (abstract data type)",
@@ -227,7 +249,9 @@
       "Category:Hypergraphs",
       "Category:Inconsistent wikidata for Commons category"
     ],
-    "length": 11135
+    "length": 11135,
+    "image_url": "/static/images/graph__abstract_data_type.jpg",
+    "local_image_path": "data/images/graph__abstract_data_type.jpg"
   },
   "Database": {
     "title": "Database",
@@ -247,7 +271,9 @@
       "Category:Articles needing additional references from March 2013",
       "Category:Articles with short description"
     ],
-    "length": 56682
+    "length": 56682,
+    "image_url": "/static/images/database.jpg",
+    "local_image_path": "data/images/database.jpg"
   },
   "Relational database": {
     "title": "Relational database",
@@ -267,7 +293,9 @@
       "Category:Computer-related introductions in 1969",
       "Category:Database management systems"
     ],
-    "length": 20027
+    "length": 20027,
+    "image_url": "/static/images/relational_database.svg",
+    "local_image_path": "data/images/relational_database.svg"
   },
   "NoSQL": {
     "title": "NoSQL",
@@ -287,7 +315,9 @@
       "Category:Structured storage",
       "Category:Use dmy dates from December 2020"
     ],
-    "length": 11319
+    "length": 11319,
+    "image_url": "/static/images/nosql.svg",
+    "local_image_path": "data/images/nosql.svg"
   },
   "Cloud computing": {
     "title": "Cloud computing",
@@ -307,7 +337,9 @@
       "Category:Cloud computing",
       "Category:Cloud infrastructure"
     ],
-    "length": 37172
+    "length": 37172,
+    "image_url": "/static/images/cloud_computing.jpg",
+    "local_image_path": "data/images/cloud_computing.jpg"
   },
   "Retrieval-augmented generation": {
     "title": "Retrieval-augmented generation",
@@ -327,7 +359,9 @@
       "Category:Natural language processing",
       "Category:Short description is different from Wikidata"
     ],
-    "length": 10230
+    "length": 10230,
+    "image_url": "/static/images/retrieval_augmented_generation.svg",
+    "local_image_path": "data/images/retrieval_augmented_generation.svg"
   },
   "Intelligent agent": {
     "title": "Intelligent agent",
@@ -346,7 +380,9 @@
       "Category:Generative AI",
       "Category:Short description is different from Wikidata"
     ],
-    "length": 19225
+    "length": 19225,
+    "image_url": "/static/images/intelligent_agent.jpg",
+    "local_image_path": "data/images/intelligent_agent.jpg"
   },
   "Multi-agent system": {
     "title": "Multi-agent system",
@@ -366,7 +402,9 @@
       "Category:Management theory",
       "Category:Multi-agent systems"
     ],
-    "length": 12400
+    "length": 12400,
+    "image_url": "/static/images/multi_agent_system.jpg",
+    "local_image_path": "data/images/multi_agent_system.jpg"
   },
   "Prompt engineering": {
     "title": "Prompt engineering",
@@ -386,7 +424,9 @@
       "Category:Natural language processing",
       "Category:Pages using multiple image with auto scaled images"
     ],
-    "length": 20545
+    "length": 20545,
+    "image_url": "/static/images/prompt_engineering.svg",
+    "local_image_path": "data/images/prompt_engineering.svg"
   },
   "Computer security": {
     "title": "Computer security",
@@ -406,7 +446,9 @@
       "Category:Articles with dead external links from November 2025",
       "Category:Articles with short description"
     ],
-    "length": 97743
+    "length": 97743,
+    "image_url": "/static/images/computer_security.jpg",
+    "local_image_path": "data/images/computer_security.jpg"
   },
   "White hat (computer security)": {
     "title": "White hat (computer security)",
@@ -424,7 +466,9 @@
       "Category:Short description matches Wikidata",
       "Category:White hat (computer security)"
     ],
-    "length": 7919
+    "length": 7919,
+    "image_url": "/static/images/white_hat__computer_security.svg",
+    "local_image_path": "data/images/white_hat__computer_security.svg"
   },
   "HTML": {
     "title": "HTML",
@@ -444,7 +488,9 @@
       "Category:Articles containing potentially dated statements from 1996",
       "Category:Articles containing potentially dated statements from 1997"
     ],
-    "length": 44335
+    "length": 44335,
+    "image_url": "/static/images/html.jpg",
+    "local_image_path": "data/images/html.jpg"
   },
   "CSS": {
     "title": "CSS",
@@ -464,7 +510,9 @@
       "Category:Short description is different from Wikidata",
       "Category:Stylesheet languages"
     ],
-    "length": 37554
+    "length": 37554,
+    "image_url": "/static/images/css.jpg",
+    "local_image_path": "data/images/css.jpg"
   },
   "JavaScript": {
     "title": "JavaScript",
@@ -484,7 +532,9 @@
       "Category:Cross-platform software",
       "Category:Dynamically typed programming languages"
     ],
-    "length": 33799
+    "length": 33799,
+    "image_url": "/static/images/javascript.jpg",
+    "local_image_path": "data/images/javascript.jpg"
   },
   "React (software)": {
     "title": "React (software)",
@@ -504,7 +554,9 @@
       "Category:Articles with short description",
       "Category:CS1 errors: periodical ignored"
     ],
-    "length": 19683
+    "length": 19683,
+    "image_url": "/static/images/react__software.jpg",
+    "local_image_path": "data/images/react__software.jpg"
   },
   "Node.js": {
     "title": "Node.js",
@@ -524,7 +576,9 @@
       "Category:Articles with unsourced statements from September 2025",
       "Category:CS1: unfit URL"
     ],
-    "length": 15524
+    "length": 15524,
+    "image_url": "/static/images/node_js.jpg",
+    "local_image_path": "data/images/node_js.jpg"
   },
   "Bootstrap (front-end framework)": {
     "title": "Bootstrap (front-end framework)",
@@ -544,7 +598,9 @@
       "Category:Commons category link is on Wikidata",
       "Category:Free software programmed in JavaScript"
     ],
-    "length": 7080
+    "length": 7080,
+    "image_url": "/static/images/bootstrap__front_end_framework.jpg",
+    "local_image_path": "data/images/bootstrap__front_end_framework.jpg"
   },
   "Three.js": {
     "title": "Three.js",
@@ -564,7 +620,9 @@
       "Category:Short description is different from Wikidata",
       "Category:Software using the MIT license"
     ],
-    "length": 5544
+    "length": 5544,
+    "image_url": "/static/images/three_js.jpg",
+    "local_image_path": "data/images/three_js.jpg"
   },
   "User interface design": {
     "title": "User interface design",
@@ -584,7 +642,9 @@
       "Category:Usability",
       "Category:User interfaces"
     ],
-    "length": 13762
+    "length": 13762,
+    "image_url": "/static/images/user_interface_design.jpg",
+    "local_image_path": "data/images/user_interface_design.jpg"
   },
   "User experience": {
     "title": "User experience",
@@ -603,7 +663,9 @@
       "Category:User interfaces",
       "Category:Webarchive template wayback links"
     ],
-    "length": 12763
+    "length": 12763,
+    "image_url": "/static/images/user_experience.svg",
+    "local_image_path": "data/images/user_experience.svg"
   },
   "Blender (software)": {
     "title": "Blender (software)",
@@ -623,6 +685,8 @@
       "Category:Articles containing potentially dated statements from December 2025",
       "Category:Articles containing video clips"
     ],
-    "length": 36258
+    "length": 36258,
+    "image_url": "/static/images/blender__software.jpg",
+    "local_image_path": "data/images/blender__software.jpg"
   }
 }

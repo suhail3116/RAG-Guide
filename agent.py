@@ -68,8 +68,11 @@ def print_sources(sources_list=None):
     for idx, s in enumerate(target, 1):
         src_name = s.get("source", "Wikipedia")
         url = s.get("url", "")
+        img_url = s.get("image_url", "")
         url_str = f" ([link={url}]{url}[/link])" if url else ""
         console.print(f"  [bold cyan][{idx}][/bold cyan] [bold]{src_name}[/bold]{url_str}")
+        if img_url:
+            console.print(f"      🖼️ [dim]Image: {img_url}[/dim]")
         preview = s.get("chunk_preview", "").replace("\n", " ").strip()
         console.print(f"      [dim]\"{preview[:140]}...\"[/dim]")
     console.print()

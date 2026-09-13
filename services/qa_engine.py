@@ -114,7 +114,8 @@ class QAEngine:
             sources.append({
                 "source": doc.metadata.get("title", "Unknown"),
                 "chunk_preview": doc.page_content[:200] + "...",
-                "url": doc.metadata.get("url", "")
+                "url": doc.metadata.get("url", ""),
+                "image_url": doc.metadata.get("image_url", "")
             })
 
         return {
@@ -161,14 +162,16 @@ class QAEngine:
             sources.append({
                 "source": doc.metadata.get("title", "Wikipedia"),
                 "chunk_preview": doc.page_content[:200] + "...",
-                "url": doc.metadata.get("url", "")
+                "url": doc.metadata.get("url", ""),
+                "image_url": doc.metadata.get("image_url", "")
             })
 
         if not sources and docs:
             sources.append({
                 "source": docs[0].metadata.get("title", "Wikipedia"),
                 "chunk_preview": docs[0].page_content[:200] + "...",
-                "url": docs[0].metadata.get("url", "")
+                "url": docs[0].metadata.get("url", ""),
+                "image_url": docs[0].metadata.get("image_url", "")
             })
 
         combined_context = "\n\n".join(context_snippets)

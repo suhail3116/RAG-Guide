@@ -52,6 +52,7 @@ class Embedder:
                 metadatas=[{
                     "title": doc["title"],
                     "url": doc.get("url", ""),
+                    "image_url": doc.get("image_url", ""),
                     "categories": ",".join(doc.get("categories", [])),
                 }]
             )

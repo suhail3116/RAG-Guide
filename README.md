@@ -15,6 +15,7 @@ Supports both an interactive **Rich Terminal CLI Agent** (with hidden/collapsibl
 * **Knowledge Corpus:** **37 Comprehensive Topics** (32 Wikipedia articles + 5 Curated Technical Workflow Guides)
 * **Streaming Engine:** **Real-Time Token Streaming** via Ollama NDJSON HTTP stream with sub-second Time-to-First-Token (TTFT)
 * **Offline Persistence:** **Local Disk Cache** (`data/articles_cache.json`) enabling 100% offline vector database rebuilds without internet dependencies
+* **Offline Media Assets:** **Local Topic Image Store** (`data/images/`) serving topic thumbnails/badges directly in Web UI & CLI outputs
 
 ---
 
