@@ -462,15 +462,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <!-- Right Controls Cluster -->
         <div class="right-cluster">
           <span class="model-label">
-            Sonnet 4.5
+            llama3.2:1b
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </span>
-          <button type="button" class="attach-btn" title="Attach file">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-            </svg>
-          </button>
-          <button type="submit" class="send-btn" id="send-btn" title="Build it">
+          <button type="submit" class="send-btn" id="send-btn" title="Send query">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="19" x2="12" y2="5"></line>
               <polyline points="5 12 12 5 19 12"></polyline>
