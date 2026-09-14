@@ -41,6 +41,33 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       -moz-osx-font-smoothing: grayscale;
     }
 
+    /* Custom Sleek Animated Scrollbars */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(9, 13, 22, 0.6);
+      border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(124, 58, 237, 0.45);
+      border-radius: 9999px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.75);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(124, 58, 237, 0.45) rgba(9, 13, 22, 0.6);
+    }
+
     /* Ambient Glow Effects */
     .ambient-glow {
       position: fixed;
@@ -367,11 +394,31 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       align-items: center;
       gap: 8px;
       overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      padding-bottom: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(124, 58, 237, 0.45) rgba(255, 255, 255, 0.04);
     }
 
-    .chips::-webkit-scrollbar { display: none; }
+    .chips::-webkit-scrollbar {
+      height: 4px;
+      display: block;
+    }
+
+    .chips::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 9999px;
+    }
+
+    .chips::-webkit-scrollbar-thumb {
+      background: rgba(124, 58, 237, 0.45);
+      border-radius: 9999px;
+      transition: background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .chips::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.8);
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+    }
 
     .chip {
       height: 32px;
