@@ -26,7 +26,8 @@ async def chat(request: ChatRequest):
                 SourceDocument(
                     source=s["source"],
                     chunk_preview=s["chunk_preview"],
-                    url=s.get("url")
+                    url=s.get("url"),
+                    image_url=s.get("image_url")
                 )
                 for s in result["sources"]
             ],

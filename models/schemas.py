@@ -26,6 +26,7 @@ class SourceDocument(BaseModel):
     source: str
     chunk_preview: str
     url: Optional[str] = None
+    image_url: Optional[str] = None
 
 
 class ChatResponse(BaseModel):

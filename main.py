@@ -30,7 +30,9 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
+# Mount static image directory
+os.makedirs("data/images", exist_ok=True)
+app.mount("/static/images", StaticFiles(directory="data/images"), name="static_images")
 
 # Include routers
 app.include_router(ui.router)
