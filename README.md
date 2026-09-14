@@ -16,6 +16,16 @@ Supports both an interactive **Rich Terminal CLI Agent** (with hidden/collapsibl
 * **Streaming Engine:** **Real-Time Token Streaming** via Ollama NDJSON HTTP stream with sub-second Time-to-First-Token (TTFT)
 * **Offline Persistence:** **Local Disk Cache** (`data/articles_cache.json`) enabling 100% offline vector database rebuilds without internet dependencies
 * **Offline Media Assets:** **Local Topic Image Store** (`data/images/`) serving topic thumbnails/badges directly in Web UI & CLI outputs
+* **Response Latency:** **~10s for 1st question (Cold Start / Server Startup)**, then **3 to 5 seconds** for subsequent questions
+
+---
+
+## ⚡ Performance & Response Latency
+
+| Session Stage | Latency | Description |
+| :--- | :--- | :--- |
+| **First Question (Cold Start)** | **~10 seconds** | Initial server startup, loading `llama3.2:1b` into memory (RAM/VRAM), and initializing ChromaDB connection. |
+| **Subsequent Questions (Warm Session)** | **3 to 5 seconds** | Fast vector similarity search and real-time streaming answer generation. |
 
 ---
 
