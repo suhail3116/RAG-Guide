@@ -87,18 +87,24 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 28px;
-      background: rgba(9, 13, 22, 0.85);
+      padding: 14px 24px;
+      background: rgba(9, 13, 22, 0.88);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       letter-spacing: -0.015em;
     }
 
@@ -111,6 +117,26 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       align-items: center;
       justify-content: center;
       box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+    }
+
+    .history-toggle-btn {
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .history-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
     }
 
     .nav-meta {
@@ -175,6 +201,149 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 5px 12px;
       border-radius: 9999px;
+    }
+
+    /* App Main Body Layout with Left History Sidebar */
+    .app-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Left Previous Chats History Sidebar */
+    .history-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: rgba(12, 16, 26, 0.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .history-sidebar.collapsed {
+      margin-left: -280px;
+    }
+
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .clear-history-btn {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .clear-history-btn:hover {
+      color: #ef4444;
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .history-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .history-item:hover {
+      background: rgba(124, 58, 237, 0.12);
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    .history-item.active {
+      background: rgba(124, 58, 237, 0.2);
+      border-color: var(--accent-cyan);
+    }
+
+    .history-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+
+    .history-item-title {
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-item-date {
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+
+    .history-delete-btn {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .history-item:hover .history-delete-btn {
+      opacity: 1;
+    }
+
+    .history-delete-btn:hover {
+      color: #ef4444;
+    }
+
+    .empty-history-msg {
+      font-size: 0.8rem;
+      color: #64748b;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    /* Main Content Column */
+    .main-content-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
     }
 
     /* Main Chat Display Stage */
@@ -425,16 +594,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       background: rgba(255, 255, 255, 0.06);
     }
 
-    .source-thumb {
-      width: 55px;
-      height: 55px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      background: #1e293b;
-      flex-shrink: 0;
-    }
-
     .source-title {
       font-weight: 600;
       font-size: 0.9rem;
@@ -618,6 +777,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
 
     /* Responsive Design */
+    @media (max-width: 768px) {
+      .history-sidebar {
+        position: absolute;
+        inset: 0 auto 0 0;
+        z-index: 30;
+      }
+    }
+
     @media (max-width: 640px) {
       header { padding: 14px 18px; }
       #chat-stage { padding: 16px; }
@@ -640,15 +807,22 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
   <!-- Header Nav -->
   <header>
-    <div class="brand">
-      <div class="brand-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
-          <path d="M12 12L2.5 7.5"></path>
-          <path d="M12 12v10"></path>
-        </svg>
+    <div class="header-left">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+            <path d="M12 12L2.5 7.5"></path>
+            <path d="M12 12v10"></path>
+          </svg>
+        </div>
+        <span>WikiAgent</span>
       </div>
-      <span>WikiAgent</span>
+
+      <button type="button" class="history-toggle-btn" onclick="toggleHistorySidebar()" title="Toggle Previous Chats Sidebar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+        History
+      </button>
     </div>
     
     <div class="nav-meta">
@@ -664,73 +838,93 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
   </header>
 
-  <!-- Main Chat Stage -->
-  <main id="chat-stage">
-    <div class="hero-greeting" id="hero-greeting">
-      <span class="hero-badge">AI-Native Grounded RAG</span>
-      <h1 class="hero-title">Describe a topic. We'll synthesize it.</h1>
-      <p class="hero-sub">Grounded local AI assistant powered by Wikipedia, ChromaDB, and Ollama. Ask technical questions or explore 37 indexed domains.</p>
-    </div>
-  </main>
-
-  <!-- Composer Floating Card -->
-  <div class="composer-container">
-    <form class="composer-card" id="chat-form" onsubmit="handleSubmit(event)">
-      <input type="text" class="input-field" id="user-input" placeholder="Ask a question or topic (e.g. 'What is Python?')..." autocomplete="off" required />
-      
-      <!-- One-Row Toolbar -->
-      <div class="tools">
-        <!-- Left Quick Chips -->
-        <div class="chips">
-          <button type="button" class="chip" onclick="ask('python')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Python
-          </button>
-          <button type="button" class="chip" onclick="ask('What is a binary search tree?')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 12h14"/></svg>
-            Data Structures
-          </button>
-          <button type="button" class="chip" onclick="ask('What is React and how do components work?')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4"/></svg>
-            React.js
-          </button>
-          <button type="button" class="chip" onclick="ask('What is an AI agent and multi-agent system?')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/></svg>
-            AI Agents
-          </button>
-          <button type="button" class="chip" onclick="ask('What is 21st.dev?')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            21st.dev
-          </button>
-          <button type="button" class="chip" onclick="ask('How is Blender used in software engineering?')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            Blender
-          </button>
-          <button type="button" class="chip" onclick="ask('What are the steps to build a modern website?')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71 1.13-1.6 1.4-2.5-1.12-.55-2.05-1.48-2.6-2.6-.9.27-1.79.69-2.5 1.4z"/><path d="M12 15l-3-3 7.5-7.5a2.12 2.12 0 0 1 3 3L12 15z"/></svg>
-            SDLC Steps
-          </button>
-          <button type="button" class="chip" onclick="ask('What is ethical hacking?')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Cybersecurity
-          </button>
-        </div>
-
-        <!-- Right Controls Cluster -->
-        <div class="right-cluster">
-          <span class="model-label">
-            llama3.2:1b
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </span>
-          <button type="submit" class="send-btn" id="send-btn" title="Send query" aria-label="Send query">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="19" x2="12" y2="5"></line>
-              <polyline points="5 12 12 5 19 12"></polyline>
-            </svg>
-          </button>
-        </div>
+  <!-- App Body Layout with Left Previous Chats Sidebar -->
+  <div class="app-body">
+    <!-- Left History Sidebar -->
+    <aside class="history-sidebar" id="history-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+          Previous Chats
+        </span>
+        <button type="button" class="clear-history-btn" onclick="clearAllHistory()" title="Clear All Saved History">Clear All</button>
       </div>
-    </form>
+      <div class="history-list" id="history-list">
+        <!-- Rendered dynamically from localStorage -->
+      </div>
+    </aside>
+
+    <!-- Main Content Column -->
+    <div class="main-content-col">
+      <!-- Main Chat Stage -->
+      <main id="chat-stage">
+        <div class="hero-greeting" id="hero-greeting">
+          <span class="hero-badge">AI-Native Grounded RAG</span>
+          <h1 class="hero-title">Describe a topic. We'll synthesize it.</h1>
+          <p class="hero-sub">Grounded local AI assistant powered by Wikipedia, ChromaDB, and Ollama. Ask technical questions or explore 37 indexed domains.</p>
+        </div>
+      </main>
+
+      <!-- Composer Floating Card -->
+      <div class="composer-container">
+        <form class="composer-card" id="chat-form" onsubmit="handleSubmit(event)">
+          <input type="text" class="input-field" id="user-input" placeholder="Ask a question or topic (e.g. 'What is Python?')..." autocomplete="off" required />
+          
+          <!-- One-Row Toolbar -->
+          <div class="tools">
+            <!-- Left Quick Chips -->
+            <div class="chips">
+              <button type="button" class="chip" onclick="ask('python')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Python
+              </button>
+              <button type="button" class="chip" onclick="ask('What is a binary search tree?')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 12h14"/></svg>
+                Data Structures
+              </button>
+              <button type="button" class="chip" onclick="ask('What is React and how do components work?')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4"/></svg>
+                React.js
+              </button>
+              <button type="button" class="chip" onclick="ask('What is an AI agent and multi-agent system?')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/></svg>
+                AI Agents
+              </button>
+              <button type="button" class="chip" onclick="ask('What is 21st.dev?')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                21st.dev
+              </button>
+              <button type="button" class="chip" onclick="ask('How is Blender used in software engineering?')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                Blender
+              </button>
+              <button type="button" class="chip" onclick="ask('What are the steps to build a modern website?')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71 1.13-1.6 1.4-2.5-1.12-.55-2.05-1.48-2.6-2.6-.9.27-1.79.69-2.5 1.4z"/><path d="M12 15l-3-3 7.5-7.5a2.12 2.12 0 0 1 3 3L12 15z"/></svg>
+                SDLC Steps
+              </button>
+              <button type="button" class="chip" onclick="ask('What is ethical hacking?')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Cybersecurity
+              </button>
+            </div>
+
+            <!-- Right Controls Cluster -->
+            <div class="right-cluster">
+              <span class="model-label">
+                llama3.2:1b
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+              <button type="submit" class="send-btn" id="send-btn" title="Send query" aria-label="Send query">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="19" x2="12" y2="5"></line>
+                  <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -740,6 +934,159 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     const sendBtn = document.getElementById('send-btn');
     const lightboxModal = document.getElementById('lightbox-modal');
     const lightboxImg = document.getElementById('lightbox-img');
+    const historySidebar = document.getElementById('history-sidebar');
+    const historyList = document.getElementById('history-list');
+
+    const STORAGE_KEY = 'wikiagent_previous_chats';
+    let currentSessionId = null;
+    let currentMessages = [];
+
+    // Initialize History on Load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHistorySidebar();
+    });
+
+    function toggleHistorySidebar() {
+      historySidebar.classList.toggle('collapsed');
+    }
+
+    function getStoredSessions() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        console.error("Error reading localStorage:", e);
+        return [];
+      }
+    }
+
+    function saveStoredSessions(sessions) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+      } catch (e) {
+        console.error("Error saving to localStorage:", e);
+      }
+    }
+
+    function renderHistorySidebar() {
+      const sessions = getStoredSessions();
+      if (!sessions || sessions.length === 0) {
+        historyList.innerHTML = '<div class="empty-history-msg">No previous chats saved</div>';
+        return;
+      }
+
+      historyList.innerHTML = sessions.map(s => `
+        <div class="history-item ${s.id === currentSessionId ? 'active' : ''}" onclick="loadSession('${s.id}')">
+          <div class="history-item-info">
+            <div class="history-item-title">${escapeHtml(s.title || 'Conversation')}</div>
+            <div class="history-item-date">${s.dateStr || ''}</div>
+          </div>
+          <button type="button" class="history-delete-btn" onclick="deleteSession(event, '${s.id}')" title="Delete chat">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    function saveCurrentSessionState() {
+      if (currentMessages.length === 0) return;
+
+      const sessions = getStoredSessions();
+      if (!currentSessionId) {
+        currentSessionId = 'chat_' + Date.now();
+      }
+
+      const firstUserMsg = currentMessages.find(m => m.role === 'user');
+      const title = firstUserMsg ? firstUserMsg.text.substring(0, 30) : 'Chat Conversation';
+      const now = new Date();
+      const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const existingIdx = sessions.findIndex(s => s.id === currentSessionId);
+      const sessionData = {
+        id: currentSessionId,
+        title: title,
+        dateStr: dateStr,
+        messages: currentMessages
+      };
+
+      if (existingIdx >= 0) {
+        sessions[existingIdx] = sessionData;
+      } else {
+        sessions.unshift(sessionData); // newest first
+      }
+
+      saveStoredSessions(sessions);
+      renderHistorySidebar();
+    }
+
+    function loadSession(id) {
+      const sessions = getStoredSessions();
+      const session = sessions.find(s => s.id === id);
+      if (!session) return;
+
+      // Save current active before switching
+      saveCurrentSessionState();
+
+      currentSessionId = session.id;
+      currentMessages = session.messages || [];
+
+      // Clear chat stage
+      const msgs = chatStage.querySelectorAll('.message');
+      msgs.forEach(m => m.remove());
+      if (heroGreeting) heroGreeting.style.display = 'none';
+
+      // Render loaded messages
+      currentMessages.forEach(m => {
+        renderMessageToStage(m.text, m.role, m.sources || []);
+      });
+
+      renderHistorySidebar();
+    }
+
+    function deleteSession(e, id) {
+      e.stopPropagation();
+      let sessions = getStoredSessions();
+      sessions = sessions.filter(s => s.id !== id);
+      saveStoredSessions(sessions);
+
+      if (currentSessionId === id) {
+        startNewChat(false);
+      } else {
+        renderHistorySidebar();
+      }
+    }
+
+    function clearAllHistory() {
+      if (confirm("Are you sure you want to clear all saved previous chats?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        startNewChat(false);
+      }
+    }
+
+    function startNewChat(autoSave = true) {
+      if (autoSave) {
+        saveCurrentSessionState();
+      }
+
+      currentSessionId = null;
+      currentMessages = [];
+
+      const messages = chatStage.querySelectorAll('.message');
+      messages.forEach(msg => msg.remove());
+      
+      if (heroGreeting) {
+        heroGreeting.style.display = 'flex';
+      }
+      
+      userInput.value = '';
+      sendBtn.disabled = false;
+      userInput.focus();
+      renderHistorySidebar();
+    }
 
     function openLightbox(src) {
       if (!src) return;
@@ -756,19 +1103,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       if (e.key === 'Escape') closeLightbox();
     });
 
-    function startNewChat() {
-      const messages = chatStage.querySelectorAll('.message');
-      messages.forEach(msg => msg.remove());
-      
-      if (heroGreeting) {
-        heroGreeting.style.display = 'flex';
-      }
-      
-      userInput.value = '';
-      sendBtn.disabled = false;
-      userInput.focus();
-    }
-
     function toggleSources(btn) {
       const dropdown = btn.nextElementSibling;
       const isHidden = dropdown.classList.toggle('hidden');
@@ -776,7 +1110,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       if (arrow) arrow.textContent = isHidden ? '▸' : '▾';
     }
 
-    function addMessage(text, role, sources = []) {
+    function renderMessageToStage(text, role, sources = []) {
       if (heroGreeting) heroGreeting.style.display = 'none';
 
       const msgDiv = document.createElement('div');
@@ -829,6 +1163,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
       chatStage.appendChild(msgDiv);
       chatStage.scrollTop = chatStage.scrollHeight;
+    }
+
+    function addMessage(text, role, sources = []) {
+      // Add to memory state
+      currentMessages.push({ role, text, sources });
+      renderMessageToStage(text, role, sources);
+      saveCurrentSessionState();
     }
 
     async function ask(query) {
