@@ -257,20 +257,98 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       border: 1px solid rgba(255, 255, 255, 0.14);
       background: #0f172a;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-      max-height: 220px;
+      max-height: 240px;
+      cursor: pointer;
+      position: relative;
     }
 
     .answer-reference-img {
       width: 100%;
       height: 100%;
-      max-height: 220px;
+      max-height: 240px;
       object-fit: cover;
       display: block;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, filter 0.3s ease;
     }
 
     .answer-reference-card:hover .answer-reference-img {
-      transform: scale(1.02);
+      transform: scale(1.03);
+      filter: brightness(1.05);
+    }
+
+    .source-thumb {
+      width: 55px;
+      height: 55px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #1e293b;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .source-thumb:hover {
+      transform: scale(1.08);
+    }
+
+    /* Full-Size Lightbox Modal */
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(5, 7, 12, 0.92);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .lightbox-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-content {
+      max-width: 92vw;
+      max-height: 88vh;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85);
+      object-fit: contain;
+      animation: zoomIn 0.25s ease-out;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(232, 134, 84, 0.85);
+      transform: scale(1.08);
     }
 
     /* Collapsible Sources Accordion */
@@ -532,6 +610,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
   <div class="ambient-glow"></div>
 
+  <!-- Lightbox Modal for Full-Size Image Viewing -->
+  <div class="lightbox-modal" id="lightbox-modal" onclick="closeLightbox()">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()" title="Close (Esc)">✕</button>
+    <img src="" alt="Full Size Media" class="lightbox-content" id="lightbox-img" onclick="event.stopPropagation()" />
+  </div>
+
   <!-- Header Nav -->
   <header>
     <div class="brand">
@@ -628,6 +712,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     const heroGreeting = document.getElementById('hero-greeting');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
+    const lightboxModal = document.getElementById('lightbox-modal');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    function openLightbox(src) {
+      if (!src) return;
+      lightboxImg.src = src;
+      lightboxModal.classList.add('active');
+    }
+
+    function closeLightbox() {
+      lightboxModal.classList.remove('active');
+      lightboxImg.src = '';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
 
     function toggleSources(btn) {
       const dropdown = btn.nextElementSibling;
@@ -650,7 +751,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         let contentHTML = '';
         if (primaryImg) {
           contentHTML += `
-            <div class="answer-reference-card">
+            <div class="answer-reference-card" onclick="openLightbox('${primaryImg}')" title="Click to view full size">
               <img src="${primaryImg}" alt="Reference Media" class="answer-reference-img" />
             </div>
           `;
@@ -675,7 +776,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         dropdown.className = 'sources-dropdown hidden';
         dropdown.innerHTML = sources.map((s, idx) => `
           <div class="source-item">
-            ${s.image_url ? `<img src="${s.image_url}" alt="${s.source}" class="source-thumb" />` : ''}
+            ${s.image_url ? `<img src="${s.image_url}" alt="${s.source}" class="source-thumb" onclick="openLightbox('${s.image_url}')" title="Click to view full size" />` : ''}
             <div style="flex: 1;">
               <div class="source-title">
                 ${idx + 1}. <a href="${s.url || '#'}" target="_blank" rel="noopener">${s.source || 'Wikipedia'} ↗</a>
