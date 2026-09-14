@@ -119,6 +119,28 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       gap: 12px;
     }
 
+    .new-chat-btn {
+      font-size: 0.81rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .new-chat-btn:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+      border-color: transparent;
+      box-shadow: 0 0 16px rgba(124, 58, 237, 0.45);
+      transform: translateY(-1px);
+    }
+
     .status-pill {
       font-size: 0.8rem;
       font-weight: 500;
@@ -630,6 +652,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
     
     <div class="nav-meta">
+      <button type="button" class="new-chat-btn" onclick="startNewChat()" title="Start New Chat">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        New Chat
+      </button>
       <span class="stat-badge">37 Topics • 1,445 Chunks</span>
       <div class="status-pill">
         <span class="status-dot"></span>
@@ -729,6 +755,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeLightbox();
     });
+
+    function startNewChat() {
+      const messages = chatStage.querySelectorAll('.message');
+      messages.forEach(msg => msg.remove());
+      
+      if (heroGreeting) {
+        heroGreeting.style.display = 'flex';
+      }
+      
+      userInput.value = '';
+      sendBtn.disabled = false;
+      userInput.focus();
+    }
 
     function toggleSources(btn) {
       const dropdown = btn.nextElementSibling;
