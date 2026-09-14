@@ -249,6 +249,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
     }
 
+    /* Reference Hero Image in Main Answer */
+    .answer-reference-card {
+      margin-bottom: 12px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: #0f172a;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      max-height: 220px;
+    }
+
+    .answer-reference-img {
+      width: 100%;
+      height: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .answer-reference-card:hover .answer-reference-img {
+      transform: scale(1.02);
+    }
+
     /* Collapsible Sources Accordion */
     .sources-toggle-btn {
       align-self: flex-start;
@@ -620,7 +644,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       
       const bubble = document.createElement('div');
       bubble.className = 'bubble';
-      bubble.innerHTML = text.replace(/\\n/g, '<br>');
+
+      if (role === 'bot' && sources && sources.length > 0) {
+        const primaryImg = sources.find(s => s.image_url)?.image_url;
+        let contentHTML = '';
+        if (primaryImg) {
+          contentHTML += `
+            <div class="answer-reference-card">
+              <img src="${primaryImg}" alt="Reference Media" class="answer-reference-img" />
+            </div>
+          `;
+        }
+        contentHTML += `<div>${text.replace(/\\n/g, '<br>')}</div>`;
+        bubble.innerHTML = contentHTML;
+      } else {
+        bubble.innerHTML = text.replace(/\\n/g, '<br>');
+      }
+
       msgDiv.appendChild(bubble);
 
       if (role === 'bot' && sources && sources.length > 0) {
